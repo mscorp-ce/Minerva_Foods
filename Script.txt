@@ -1,0 +1,346 @@
+
+
+CREATE DATABASE Minerva_Foods2;
+GO
+
+USE Minerva_Foods2;
+GO
+
+CREATE TABLE tab_projects(
+  project_cod INT IDENTITY(1,1), 
+  name NVARCHAR(100) NOT NULL, 
+  description NVARCHAR(255) NOT NULL, 
+  start_date DATE NOT NULL, 
+  end_date DATE NOT NULL,
+  status CHAR(1) NOT NULL DEFAULT 'A',
+  CONSTRAINT pk_tab_projects PRIMARY KEY(project_cod),
+  CONSTRAINT chk_status_pro CHECK (status IN ('A', 'P', 'C'))
+);
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Table responsible for storing the existing projects', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_projects';
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Project code (primary key)', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_projects', 
+    @level2type = N'COLUMN', @level2name = 'project_cod';
+
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Nome do projeto', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_projects', 
+    @level2type = N'COLUMN', @level2name = 'name';
+
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Project description', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_projects', 
+    @level2type = N'COLUMN', @level2name = 'description';
+
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Project start date', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_projects', 
+    @level2type = N'COLUMN', @level2name = 'start_date';
+
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Expected project end date', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_projects', 
+    @level2type = N'COLUMN', @level2name = 'end_date';
+
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Project status (in progress, completed, etc.)', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_projects', 
+    @level2type = N'COLUMN', @level2name = 'status';
+
+GO
+
+CREATE TABLE tab_projects_tasks(
+  task_cod INT IDENTITY(1,1), 
+  project_cod INT, 
+  name NVARCHAR(100) NOT NULL, 
+  description NVARCHAR(255) NOT NULL,
+  start_date DATE NOT NULL, 
+  end_date DATE NOT NULL,
+  status CHAR(1) NOT NULL DEFAULT 'A',
+  CONSTRAINT pk_tab_projects_tasks PRIMARY KEY(task_cod),
+  CONSTRAINT fk_tab_projects_tasks_pro FOREIGN KEY(project_cod) REFERENCES tab_projects(project_cod),
+  CONSTRAINT chk_status_tas CHECK (status IN ('A', 'P', 'C'))
+);
+
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Table with project activities', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_projects_tasks';
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Task code (primary key)', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_projects_tasks', 
+    @level2type = N'COLUMN', @level2name = 'task_cod';
+
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Project code (foreign key)', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_projects_tasks', 
+    @level2type = N'COLUMN', @level2name = 'project_cod';
+
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Task name', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_projects_tasks', 
+    @level2type = N'COLUMN', @level2name = 'name';
+
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Task description', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_projects_tasks', 
+    @level2type = N'COLUMN', @level2name = 'description';
+
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Task start date', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_projects_tasks', 
+    @level2type = N'COLUMN', @level2name = 'start_date';
+
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Task expected end date', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_projects_tasks', 
+    @level2type = N'COLUMN', @level2name = 'end_date';
+
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Task status (pending, in progress, completed, etc.)', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_projects_tasks', 
+    @level2type = N'COLUMN', @level2name = 'status';
+
+GO
+
+CREATE TABLE tab_employees(
+  employee_cod INT IDENTITY(1,1), 
+  name NVARCHAR(100) NOT NULL, 
+  position NVARCHAR(80) NOT NULL, 
+  department NVARCHAR(50) NOT NULL, 
+  CONSTRAINT pk_tab_employees PRIMARY KEY(employee_cod),
+);
+
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Table with Collaborators', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_employees';
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Employee code (primary key)', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_employees', 
+    @level2type = N'COLUMN', @level2name = 'employee_cod';
+
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Employee name', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_employees', 
+    @level2type = N'COLUMN', @level2name = 'name';
+
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Employee position', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_employees', 
+    @level2type = N'COLUMN', @level2name = 'position';
+
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Employee department', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_employees', 
+    @level2type = N'COLUMN', @level2name = 'department';
+
+GO
+
+CREATE TABLE tab_projects_allocation(
+  allocation_cod INT IDENTITY(1,1),
+  employee_cod INT, 
+  task_cod INT, 
+  start_date DATE NOT NULL, 
+  end_date DATE NOT NULL,
+  CONSTRAINT pk_tab_projects_allocation PRIMARY KEY(allocation_cod),
+  CONSTRAINT fk_tab_projects_allocation_emp FOREIGN KEY(employee_cod) REFERENCES tab_employees(employee_cod),
+  CONSTRAINT fk_tab_projects_allocation_tas FOREIGN KEY(task_cod) REFERENCES tab_projects_tasks(task_cod),
+);
+
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Table with project allocations', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_projects_allocation';
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Allocation code (primary key)', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_projects_allocation', 
+    @level2type = N'COLUMN', @level2name = 'allocation_cod';
+
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Employee code (foreign key)', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_projects_allocation', 
+    @level2type = N'COLUMN', @level2name = 'employee_cod';
+
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Task code (foreign key)', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_projects_allocation', 
+    @level2type = N'COLUMN', @level2name = 'task_cod';
+
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Allocation start date', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_projects_allocation', 
+    @level2type = N'COLUMN', @level2name = 'start_date';
+
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'Description', 
+    @value = N'Allocation end date', 
+    @level0type = N'SCHEMA', @level0name = 'dbo', 
+    @level1type = N'TABLE', @level1name = 'tab_projects_allocation', 
+    @level2type = N'COLUMN', @level2name = 'end_date';
+
+GO
+
+INSERT INTO tab_projects (name, description, start_date, end_date, status)
+VALUES
+('Projeto Alpha', 'Projeto de desenvolvimento de sistema de gestão.', '2025-01-01', '2025-06-30', 'A'),
+('Projeto Beta', 'Criação de aplicativo mobile para comunicação interna.', '2025-02-01', '2025-12-31', 'P'),
+('Projeto Gamma', 'Implementação de novo site institucional.', '2025-03-01', '2025-08-31', 'C');
+
+GO
+
+INSERT INTO tab_employees (name, position, department)
+VALUES
+('João Silva', 'Desenvolvedor', 'TI'),
+('Maria Oliveira', 'Gerente de Projetos', 'Gestão'),
+('Carlos Santos', 'Analista de Sistemas', 'TI'),
+('Ana Souza', 'Assistente Administrativo', 'Administração'),
+('Pedro Costa', 'Analista de Marketing', 'Marketing');
+
+GO
+
+INSERT INTO tab_projects_tasks (project_cod, name, description, start_date, end_date, status)
+VALUES
+(1, 'Planejamento do Sistema', 'Planejamento inicial do sistema de gestão.', '2025-01-01', '2025-01-10', 'A'),
+(1, 'Desenvolvimento do Backend', 'Desenvolvimento da API para o sistema.', '2025-01-11', '2025-02-28', 'P'),
+(1, 'Desenvolvimento do Frontend', 'Criação das interfaces do sistema.', '2025-02-01', '2025-03-15', 'P'),
+(1, 'Testes de Integração', 'Realização dos testes de integração do sistema.', '2025-03-16', '2025-04-10', 'A'),
+(1, 'Entrega do Sistema', 'Entrega final do sistema para o cliente.', '2025-04-11', '2025-04-15', 'C');
+
+GO
+
+INSERT INTO tab_projects_allocation (employee_cod, task_cod, start_date, end_date)
+VALUES
+(1, 1, '2025-01-01', '2025-01-10'),  -- João Silva alocado na tarefa 1 (Planejamento do Sistema)
+(2, 2, '2025-01-11', '2025-02-28');  -- Maria Oliveira alocada na tarefa 2 (Desenvolvimento do Backend)
+
+GO
+
+CREATE PROCEDURE sp_list_incomplete_tasks_in_projects_with_allocations_linked_employees
+    @project_cod INT
+AS
+BEGIN
+    SELECT TAS.task_cod, 
+           TAS.name AS task_name, 
+           TAS.description AS task_description, 
+           TAS.start_date, 
+           TAS.end_date, 
+           TAS.status AS task_status,
+           EMP.employee_cod, 
+           EMP.name AS employee_name, 
+           EMP.position AS employee_position
+      FROM tab_projects PRO
+	  JOIN tab_projects_tasks TAS ON TAS.project_cod = PRO.project_cod       
+      JOIN tab_projects_allocation ALO ON TAS.task_cod = ALO.task_cod
+ LEFT JOIN tab_employees EMP ON ALO.employee_cod = EMP.employee_cod
+     WHERE PRO.project_cod = @project_cod  
+           AND TAS.status <> 'C'          
+  ORDER BY TAS.task_cod;
+END;
+
+GO
+
+EXEC sp_list_incomplete_tasks_in_projects_with_allocations_linked_employees @project_cod = 1;
+
+GO

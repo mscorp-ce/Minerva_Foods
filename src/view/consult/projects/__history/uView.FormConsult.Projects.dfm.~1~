@@ -1,0 +1,27 @@
+inherited frmConsultaCliente: TfrmConsultaCliente
+  Caption = 'Consulta de Clientes'
+  TextHeight = 13
+  inherited grdConsult: TDBGrid
+    OnKeyDown = grdConsultaKeyDown
+  end
+  inherited cdsConsult: TClientDataSet
+    object cdsConsultidcliente: TIntegerField
+      FieldName = 'idcliente'
+    end
+    object cdsConsultnome: TStringField
+      FieldName = 'nome'
+      Size = 50
+    end
+    object cdsConsultcpf: TStringField
+      FieldName = 'cpf'
+      Size = 15
+    end
+    object cdsConsultdata_de_nascimento: TDateField
+      FieldName = 'data_de_nascimento'
+    end
+    object cdsConsultstatus: TStringField
+      FieldName = 'status'
+      Size = 1
+    end
+  end
+end

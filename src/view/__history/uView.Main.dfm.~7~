@@ -1,0 +1,42 @@
+object frmMain: TfrmMain
+  Left = 0
+  Top = 0
+  Caption = 'Project Management'
+  ClientHeight = 441
+  ClientWidth = 624
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
+  Menu = mnMenu
+  Position = poScreenCenter
+  TextHeight = 15
+  object mnMenu: TMainMenu
+    Left = 576
+    Top = 8
+    object mniRegistrations: TMenuItem
+      Caption = 'Registrations'
+      object mniProjects: TMenuItem
+        Caption = 'Projects'
+        OnClick = mniProjectsClick
+      end
+    end
+    object mniMovements: TMenuItem
+      Caption = 'Movements'
+      ImageName = 'mniMovements'
+      object mniProjectsTasks: TMenuItem
+        Caption = 'Projects/Tasks'
+        OnClick = mniProjectsTasksClick
+      end
+    end
+    object mniExit: TMenuItem
+      Caption = 'Exit'
+      object mniClose: TMenuItem
+        Caption = 'Close'
+        OnClick = mniCloseClick
+      end
+    end
+  end
+end

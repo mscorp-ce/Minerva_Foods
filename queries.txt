@@ -1,0 +1,24 @@
+USE Minerva_Foods;
+GO
+
+SELECT
+    o.name AS TableName,
+    ep.value AS TableComment,
+    c.name AS ColumnName,
+    ep_column.value AS ColumnComment
+FROM 
+    sys.objects AS o
+LEFT JOIN 
+    sys.extended_properties AS ep
+    ON o.object_id = ep.major_id 
+    AND ep.minor_id = 0 
+LEFT JOIN 
+    sys.columns AS c
+    ON o.object_id = c.object_id
+LEFT JOIN 
+    sys.extended_properties AS ep_column
+    ON c.column_id = ep_column.minor_id 
+    AND c.object_id = ep_column.major_id
+WHERE 
+    o.type = 'U' -- 'U' representa uma tabela de usuário (user table)
+    AND o.name = 'tab_projects'; -- Substitua 'NomeDaTabela' pelo nome da sua tabela

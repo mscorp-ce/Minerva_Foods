@@ -1,0 +1,187 @@
+﻿unit uView.FormProjects.Consultation;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uView.FormConsult, Data.DB,
+  Datasnap.DBClient, Vcl.Grids, Vcl.DBGrids, Vcl.Buttons, Vcl.ExtCtrls,
+  System.Generics.Collections, uModel.Abstraction, uModel.Entities.Project;
+
+type
+  TfrmProjectsConsultation = class(TfrmConsult)
+    procedure grdConsultaKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure spbAllClick(Sender: TObject);
+  private
+    { Private declarations }
+    ControllerProject: IController<TProject>;
+
+    procedure Search(var CommandSQL: String);
+    procedure ExecuteFrom(const Id: Integer = 0);
+  protected
+    procedure DoShow(); override;
+    procedure Filter(); override;
+    procedure All(); override;
+    procedure Include(); override;
+    procedure Change(); override;
+    procedure Delete(); override;
+    procedure Consult(); override;
+  public
+    { Public declarations }
+  end;
+
+var
+  frmProjectsConsultation: TfrmProjectsConsultation;
+
+implementation
+
+{$R *.dfm}
+
+uses
+  System.UITypes, uModel.ConstsStatement.Projects, uController.RootProject,
+  uController.Project, uController.DataConverter.Project, uView.Project,
+  uView.CustomFormFilterProject;
+
+{ TfrmConsulta2 }
+
+procedure TfrmProjectsConsultation.All();
+begin
+  inherited;
+  Search(QUERY_PROJECTS);
+end;
+
+procedure TfrmProjectsConsultation.Change();
+begin
+  inherited;
+
+  State:= dsEdit;
+
+  ExecuteFrom(cdsConsult.FieldByName('project_cod').AsInteger);
+end;
+
+procedure TfrmProjectsConsultation.Consult();
+begin
+  inherited;
+
+  State:= dsBrowse;
+
+  ExecuteFrom();
+end;
+
+procedure TfrmProjectsConsultation.Delete();
+const
+  Msg = 'Deseja realmente exluir o registro selecionado?';
+var
+  Project: TProject;
+begin
+  inherited;
+
+  if cdsConsulta.IsEmpty then
+    begin
+      ShowMessage('There are no records to be deleted.');
+      Exit();
+    end;
+
+  if MessageDlg(Msg, mtConfirmation, [mbYes, mbNo], 0, mbYes) = mrYes then
+    begin
+      Cliente:= TCliente.Create;
+      try
+        Project.Code:= cdsConsulta.FieldByName('project_cod').AsInteger;
+        if ControllerCliente.DeleteById(Project) then
+          begin
+            All();
+          end;
+      finally
+        FreeAndNil(Cliente);
+      end;
+    end;
+end;
+
+procedure TfrmProjectsConsultation.DoShow();
+begin
+  inherited;
+  ControllerCliente:= TControllerCliente.Create;
+  State:= dsBrowse;
+end;
+
+procedure TfrmProjectsConsultation.Filter();
+var
+  CustomFormFilter: TCustomFormFilterCliente;
+  SQL: String;
+begin
+  inherited;
+
+  CustomFormFilter:= TCustomFormFilterCliente.Create;
+  try
+    CustomFormFilter.ShowModal;
+    SQL:= ctSQLClientes;
+    SQL:= SQL + CustomFormFilter.Confirmar('PRO');
+
+    if SQL.IsEmpty then
+      begin
+        ShowMessage('Nenhum filtro informado.');
+        Exit;
+      end;
+
+    Search(SQL);
+
+    //ShowMessage(SQL);
+  finally
+    FreeAndNil(CustomFormFilter);
+  end;
+end;
+
+procedure TfrmProjectsConsultation.grdConsultaKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  inherited;
+  if (Shift = [ssCtrl]) and (Key = 46) then
+    Key := 0;
+end;
+
+procedure TfrmProjectsConsultation.ExecuteFrom(const Id: Integer);
+var
+  FromCliente: TfrmCliente;
+begin
+  FromCliente:= TfrmCliente.Create(Self);
+  try
+    FromCliente.Id:= Id;
+    FromCliente.ShowModal();
+  finally
+    FreeAndNil(FromCliente);
+  end;
+end;
+
+procedure TfrmProjectsConsultation.Include();
+begin
+  inherited;
+  State:= dsInsert;
+
+  ExecuteFrom();
+end;
+
+procedure TfrmProjectsConsultation.Search(var CommandSQL: String);
+var
+  ControllerRootCliente: IRootController<TCliente>;
+  DataConverter: IDataConverter<TCliente>;
+begin
+  ControllerRootCliente:= TControllerRootCliente.Create();
+  cdsConsult.Close();
+
+  cdsConsult.CreateDataSet();
+
+  var Clientes:= ControllerRootCliente.FindAll(CommandSQL);
+  try
+    DataConverter:= TDataConverterCliente.Create();
+    DataConverter.Populate(Clientes, cdsConsult);
+
+    cdsConsult.Open();
+  finally
+    FreeAndNil(Clientes);
+  end;
+end;
+
+end;
+
+end.

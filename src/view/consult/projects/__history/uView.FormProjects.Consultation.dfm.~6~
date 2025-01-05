@@ -1,0 +1,82 @@
+inherited frmProjectsConsultation: TfrmProjectsConsultation
+  Caption = 'Project Consultation'
+  TextHeight = 13
+  inherited grdConsult: TDBGrid
+    OnKeyDown = grdConsultaKeyDown
+    Columns = <
+      item
+        Expanded = False
+        FieldName = 'project_cod'
+        ReadOnly = True
+        Title.Caption = 'Project Code'
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'name'
+        ReadOnly = True
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'description'
+        ReadOnly = True
+        Width = 64
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'start_date'
+        ReadOnly = True
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'end_date'
+        ReadOnly = True
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'status'
+        ReadOnly = True
+        Width = 64
+        Visible = True
+      end>
+  end
+  inherited cdsConsult: TClientDataSet
+    ProviderName = 'DataModule1.DataSetProvider1'
+    object cdsConsultproject_cod: TIntegerField
+      FieldName = 'project_cod'
+    end
+    object cdsConsultname: TWideStringField
+      FieldName = 'name'
+      Origin = 'name'
+      Required = True
+      Size = 100
+    end
+    object cdsConsultdescription: TWideStringField
+      FieldName = 'description'
+      Origin = 'description'
+      Required = True
+      Size = 255
+    end
+    object cdsConsultstart_date: TDateField
+      FieldName = 'start_date'
+      Origin = 'start_date'
+      Required = True
+    end
+    object cdsConsultend_date: TDateField
+      FieldName = 'end_date'
+      Origin = 'end_date'
+      Required = True
+    end
+    object cdsConsultstatus: TStringField
+      FieldName = 'status'
+      Origin = 'status'
+      Required = True
+      FixedChar = True
+      Size = 1
+    end
+  end
+end
